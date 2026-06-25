@@ -1,0 +1,139 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #fafafa;
+    color: #282c3f;
+}
+
+.header {
+    min-height: 90px;
+    padding: 16px 50px;
+    display: grid;
+    grid-template-columns: 280px 1fr 240px;
+    align-items: center;
+    gap: 20px;
+    background: #ffffff;
+    border-bottom: 1px solid #e9e9eb;
+    box-shadow: 0 2px 10px rgba(40, 44, 63, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.left h2 {
+    margin: 0;
+    font-size: 26px;
+    line-height: 1.2;
+    color: #282c3f;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+}
+
+.logo-img {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+}
+
+.main-title {
+    margin: 0;
+    font-size: 30px;
+    color: #282c3f;
+    white-space: nowrap;
+}
+
+.right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+}
+
+.right a {
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.cart-btn {
+    color: #ff5200;
+    border: 1px solid #ff5200;
+    padding: 9px 16px;
+    border-radius: 4px;
+}
+
+.signup-btn {
+    background: #ff5200;
+    color: #ffffff !important;
+    padding: 10px 18px;
+    border-radius: 4px;
+}
+
+.container {
+    max-width: 1180px;
+    margin: 38px auto 60px;
+    padding: 0 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 32px;
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.card {
+    background: #ffffff;
+    border: 1px solid #e9e9eb;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: 0.25s ease;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(40, 44, 63, 0.16);
+}
+
+.card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+.card-content h3 {
+    margin: 0 0 10px;
+    font-size: 24px;
+    color: #282c3f;
+}
+
+.cuisine {
+    margin: 0 0 16px;
+    color: #686b78;
+    font-size: 16px;
+}
+
+.rating {
+    display: inline-block;
+    margin: 0;
+    padding: 7px 12px;
+    background: #48c479;
+    color: #ffffff;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: bold;
+}

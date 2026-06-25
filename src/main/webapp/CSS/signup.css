@@ -1,0 +1,116 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ffffff;
+    background-image: url("/Foodies1/images/background1.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    position: relative;
+    isolation: isolate;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: transparent;
+    z-index: 0;
+    pointer-events: none;
+    
+    filter: brightness(1.08) saturate(1.35) contrast(1.08);
+}
+
+h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 120px;
+    margin-top: 50px;
+    color: #ff5200;
+    font-size: 42px;
+    font-weight: bold;
+}
+
+.logo-img {
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px;
+    max-width: 48px;
+    display: block;
+    flex-shrink: 0;
+    object-fit: contain;
+    animation: spinIn 1s ease-out forwards;
+}
+
+@keyframes spinIn {
+    0%   { transform: rotate(0deg) scale(0); opacity: 0; }
+    60%  { transform: rotate(380deg) scale(1.1); opacity: 1; }
+    80%  { transform: rotate(350deg) scale(0.95); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+h1 {
+    margin-left: 120px;
+    margin-top: 30px;
+    font-size: 34px;
+    color: #282c3f;
+}
+
+p {
+    margin-left: 120px;
+    color: #686b78;
+    font-size: 16px;
+}
+
+a {
+    text-decoration: none;
+    color: #ff5200;
+    font-weight: bold;
+}
+
+form {
+    width: 350px;
+    margin-left: 120px;
+    margin-top: 40px;
+}
+
+label {
+    font-size: 14px;
+    color: #3d4152;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    margin-top: 8px;
+    border: 1px solid #d4d5d9;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+    border-radius: 4px;
+}
+
+input:focus {
+    border-color: #ff5200;
+}
+
+input[type="submit"] {
+    background-color: #ff5200;
+    color: white;
+    border: none;
+    margin-top: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    height: 52px;
+    font-size: 15px;
+    letter-spacing: 1px;
+}
+
+input[type="submit"]:hover {
+    background-color: #e64900;
+}

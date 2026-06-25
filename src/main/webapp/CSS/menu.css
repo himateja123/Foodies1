@@ -1,0 +1,118 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f7f7f7;
+    color: #282c3f;
+}
+
+.menu-header {
+    background: #ffffff;
+    padding: 24px 70px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    box-shadow: 0 2px 10px rgba(40, 44, 63, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.back-link {
+    text-decoration: none;
+    color: #ff5200;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.menu-header h1 {
+    margin: 0;
+    font-size: 34px;
+    color: #282c3f;
+}
+
+.menu-container {
+    max-width: 1050px;
+    margin: 40px auto;
+    padding: 0 24px;
+    display: grid;
+    gap: 24px;
+}
+
+.menu-card {
+    background: #ffffff;
+    border: 1px solid #e9e9eb;
+    border-radius: 10px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    box-shadow: 0 4px 14px rgba(40, 44, 63, 0.08);
+}
+
+.menu-card img {
+    width: 220px;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+}
+
+.menu-content {
+    padding: 22px;
+}
+
+.menu-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.menu-top h2 {
+    margin: 0;
+    font-size: 26px;
+    color: #282c3f;
+}
+
+.rating {
+    background: #48c479;
+    color: #ffffff;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.description {
+    margin: 14px 0 24px;
+    color: #686b78;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.menu-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price {
+    margin: 0;
+    color: #282c3f;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.menu-bottom button {
+    background: #ff5200;
+    color: #ffffff;
+    border: none;
+    padding: 11px 26px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.menu-bottom button:hover {
+    background: #e64900;
+}
