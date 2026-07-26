@@ -14,24 +14,30 @@ import com.foodies1.model.Menu;
 
 public class MenuDaoImpl implements MenuDao {
 
-	
+
 	static final String ADD_MENU="insert into menu(itemName,price,imagePath,ratings,isAvailable,restaurant_id) values (?,?,?,?,?,?)";
 	static final String GET_MENU="select * from menu where restaurant_id=?";
 	static final String GET_ALL="select * from menu";
 	static final String UPDATE_MENU="update menu set itemName=?,price=?,ratings=?,isAvailable=? where name=?";
 	static final String DELETE_MENU="delete from menu where menu_id=?";
 	static final String GETMENUBY_ID ="select menu_id, itemName, imagePath, price from menu where menu_id=?";
-	
+
 	private Connection con;
 	private PreparedStatement pstmt;
 	private Statement stmt;
 
 	public MenuDaoImpl() {
-		
-		String url = "jdbc:mysql://localhost:3306/foodies";
-		String username = "root";
-		String password = "Himateja1234*";
-		
+
+		String host = System.getenv().getOrDefault("MYSQLHOST", "localhost");
+		String port = System.getenv().getOrDefault("MYSQLPORT", "3306");
+		String database = System.getenv().getOrDefault("MYSQLDATABASE", "foodies");
+
+		String url = "jdbc:mysql://" + host + ":" + port + "/" + database
+				+ "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+
+		String username = System.getenv().getOrDefault("MYSQLUSER", "root");
+		String password = System.getenv().getOrDefault("MYSQLPASSWORD", "");
+
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			con = DriverManager.getConnection(url, username, password);
@@ -42,7 +48,7 @@ public class MenuDaoImpl implements MenuDao {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public int addMenu(Menu menu) {
 		try {
@@ -53,7 +59,7 @@ public class MenuDaoImpl implements MenuDao {
 			pstmt.setFloat(4, menu.getRatings());
 			pstmt.setBoolean(5, menu.getisAvailable());
 			pstmt.setInt(6, menu.getRestaurant_id());
-			
+
 			return pstmt.executeUpdate();
 		} 
 		catch (SQLException e) {
@@ -79,7 +85,7 @@ public class MenuDaoImpl implements MenuDao {
 				boolean isavail =res.getBoolean("isAvailable");
 				int rest_id =res.getInt("restaurant_id");
 				String desc=res.getString("description");
-				
+
 				menu = new Menu(m_id,itemname,price,img,rating,isavail,rest_id,desc);
 				addMenu.add(menu);
 			}
@@ -87,7 +93,7 @@ public class MenuDaoImpl implements MenuDao {
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return addMenu;
 	}
 
@@ -98,7 +104,7 @@ public class MenuDaoImpl implements MenuDao {
 		try {
 			stmt =con.createStatement();
 			ResultSet res = stmt.executeQuery(GET_ALL);
-			
+
 			while(res.next()) {
 				int m_id =res.getInt("menu_id");
 				String itemname =res.getString("itemName");
@@ -107,11 +113,11 @@ public class MenuDaoImpl implements MenuDao {
 				boolean isavail =res.getBoolean("isAvailable");
 				int rest_id =res.getInt("restaurant_id");
 				String desc=res.getString("description");
-				
+
 				menu = new Menu(m_id,itemname,price,null,rating,isavail,rest_id,desc);
 				addMenu.add(menu);
 			}
-			
+
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -121,14 +127,14 @@ public class MenuDaoImpl implements MenuDao {
 
 	@Override
 	public int updateMenu(Menu menu) {
-		
+
 		try {
 			pstmt =con.prepareStatement(UPDATE_MENU);
 			pstmt.setString(1, menu.getItemName());
 			pstmt.setInt(2, menu.getPrice());
 			pstmt.setFloat(3, menu.getRatings());
 			pstmt.setBoolean(4, menu.getisAvailable());
-			
+
 			return pstmt.executeUpdate();
 		} 
 		catch (SQLException e) {
@@ -151,30 +157,30 @@ public class MenuDaoImpl implements MenuDao {
 
 	@Override
 	public Menu getMenuById(int menu_id) {
-		
+
 		Menu menu=null;
 		try {
-			
+
 			pstmt = con.prepareStatement(GETMENUBY_ID);
 			pstmt.setInt(1, menu_id);
-			
+
 			ResultSet res = pstmt.executeQuery();
 
-	        if (res.next()) {
-	            menu = new Menu();
+			if (res.next()) {
+				menu = new Menu();
 
-	            menu.setMenu_id(res.getInt("menu_id"));
-	            menu.setItemName(res.getString("itemName"));
-	            menu.setImagePath(res.getString("imagePath"));
-	            menu.setPrice(res.getInt("price"));
-	        }
-			
+				menu.setMenu_id(res.getInt("menu_id"));
+				menu.setItemName(res.getString("itemName"));
+				menu.setImagePath(res.getString("imagePath"));
+				menu.setPrice(res.getInt("price"));
+			}
+
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		
+
+
 		return menu;
 	}
 

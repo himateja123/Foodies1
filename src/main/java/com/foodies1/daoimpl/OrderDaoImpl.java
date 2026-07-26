@@ -26,9 +26,15 @@ public class OrderDaoImpl implements OrderDao {
 	private Statement stmt;
 	public OrderDaoImpl() {
 
-		String url = "jdbc:mysql://localhost:3306/foodies";
-		String username = "root";
-		String password = "Himateja1234*";
+		String host = System.getenv().getOrDefault("MYSQLHOST", "localhost");
+		String port = System.getenv().getOrDefault("MYSQLPORT", "3306");
+		String database = System.getenv().getOrDefault("MYSQLDATABASE", "foodies");
+
+		String url = "jdbc:mysql://" + host + ":" + port + "/" + database
+				+ "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+
+		String username = System.getenv().getOrDefault("MYSQLUSER", "root");
+		String password = System.getenv().getOrDefault("MYSQLPASSWORD", "");
 
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
@@ -46,12 +52,12 @@ public class OrderDaoImpl implements OrderDao {
 
 		try {
 			pstmt = con.prepareStatement(ADD_ORDER);
-//			pstmt.setInt(1, order.getRestaurant_id());
-//			pstmt.setInt(1, order.getU_id());
+			//			pstmt.setInt(1, order.getRestaurant_id());
+			//			pstmt.setInt(1, order.getU_id());
 			pstmt.setDouble(1, order.getTotalAmount());
 			pstmt.setString(2, order.getModeofPayment());
 			pstmt.setString(3, order.getAddress());
-//			pstmt.setString(5, order.getStatus());
+			//			pstmt.setString(5, order.getStatus());
 
 			return pstmt.executeUpdate();
 		} 

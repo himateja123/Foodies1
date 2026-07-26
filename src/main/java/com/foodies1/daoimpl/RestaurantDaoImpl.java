@@ -33,9 +33,16 @@ public class RestaurantDaoImpl implements RestaurantDao{
 	private boolean isactive;
 
 	public RestaurantDaoImpl() {
-		String url = "jdbc:mysql://localhost:3306/foodies";
-		String username="root";
-		String password="Himateja1234*";
+		String host = System.getenv().getOrDefault("MYSQLHOST", "localhost");
+		String port = System.getenv().getOrDefault("MYSQLPORT", "3306");
+		String database = System.getenv().getOrDefault("MYSQLDATABASE", "foodies");
+
+		String url = "jdbc:mysql://" + host + ":" + port + "/" + database
+				+ "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+
+		String username = System.getenv().getOrDefault("MYSQLUSER", "root");
+		String password = System.getenv().getOrDefault("MYSQLPASSWORD", "");
+		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			con  = DriverManager.getConnection(url, username, password);
@@ -98,15 +105,15 @@ public class RestaurantDaoImpl implements RestaurantDao{
 
 	@Override
 	public List<Restaurants> getAll() {
-		
+
 		ResultSet res=null;
 		Restaurants rest=null;
 		List <Restaurants> restaurantList =new ArrayList<>();
-		
+
 		try {
 			Statement stmt = con.createStatement();
 			res = stmt.executeQuery(SELECT_ALL);
-			
+
 			while(res.next()) {
 				int r_id = res.getInt("restaurant_id");
 				String name=res.getString("name");
@@ -115,9 +122,9 @@ public class RestaurantDaoImpl implements RestaurantDao{
 				String cuisine =res.getString("cuisineType");
 				String address=res.getString("address");
 				boolean isactive=res.getBoolean("isActive");
-				
+
 				rest = new Restaurants(r_id, name,imagept,ratings,cuisine,address,isactive);
-				
+
 				restaurantList.add(rest);
 			}
 		} 
