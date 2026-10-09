@@ -108,20 +108,17 @@ public class MenuDaoImpl implements MenuDao {
 
 	@Override
 	public int updateMenu(Menu menu) {
-
-		try {
-			pstmt =con.prepareStatement(UPDATE_MENU);
-			pstmt.setString(1, menu.getItemName());
-			pstmt.setInt(2, menu.getPrice());
-			pstmt.setFloat(3, menu.getRatings());
-			pstmt.setBoolean(4, menu.getisAvailable());
-
-			return pstmt.executeUpdate();
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+		try (PreparedStatement statement = con.prepareStatement(
+				"update menu set itemName=?, price=?, ratings=?, isAvailable=? where menu_id=?")) {
+			statement.setString(1, menu.getItemName());
+			statement.setInt(2, menu.getPrice());
+			statement.setFloat(3, menu.getRatings());
+			statement.setBoolean(4, menu.getisAvailable());
+			statement.setInt(5, menu.getMenu_id());
+			return statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new IllegalStateException("Unable to update menu item " + menu.getMenu_id(), e);
 		}
-		return 0;
 	}
 
 	@Override
