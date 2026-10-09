@@ -68,27 +68,18 @@ public class OrderDaoImpl implements OrderDao {
 
 	@Override
 	public List<Orders> getAll() {
-
-		List<Orders> list =new ArrayList<Orders>();
-		Orders order=null;
-
-		try {
-			stmt =con.createStatement();
-			ResultSet res = stmt.executeQuery(GET_ALL);
-
-			int orderid =res.getInt("order_id");
-			int userid =res.getInt("u_id");
-			double amount =res.getDouble("totalAmount");
-			String modeofpay =res.getString("modeofPayment");
-			String status =res.getString("status");
-
-			order = new Orders(orderid,0,userid,amount,modeofpay,status,null);
-			list.add(order);
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+		List<Orders> orders = new ArrayList<>();
+		try (Statement statement = con.createStatement();
+				ResultSet res = statement.executeQuery(GET_ALL)) {
+			while (res.next()) {
+				orders.add(new Orders(res.getInt("order_id"), res.getInt("restaurant_id"),
+						res.getInt("u_id"), res.getDouble("totalAmount"),
+						res.getString("modeofPayment"), res.getString("status"), res.getString("address")));
+			}
+		} catch (SQLException e) {
+			throw new IllegalStateException("Unable to load orders", e);
 		}
-		return list;
+		return orders;
 	}
 
 	@Override
