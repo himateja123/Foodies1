@@ -9,7 +9,7 @@
 <head>
 <meta charset="UTF-8" />
 <title>Foodies Menu</title>
-<link rel="stylesheet" type="text/css" href="/Foodies1/CSS/menu.css?v=1" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CSS/menu.css?v=1" />
 </head>
 
 <body>
@@ -28,7 +28,7 @@ for(Menu m : menulist){
 %>
 
 		<div class="menu-card">
-			<img src="/Foodies1/<%= m.getImagePath()%>"
+			<img src="${pageContext.request.contextPath}/<%= m.getImagePath()%>"
 				alt="<%= m.getItemName() %>" />
 
 			<div class="menu-content">

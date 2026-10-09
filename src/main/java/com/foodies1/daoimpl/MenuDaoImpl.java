@@ -27,27 +27,8 @@ public class MenuDaoImpl implements MenuDao {
 	private Statement stmt;
 
 	public MenuDaoImpl() {
-
-		String host = System.getenv().getOrDefault("MYSQLHOST", "localhost");
-		String port = System.getenv().getOrDefault("MYSQLPORT", "3306");
-		String database = System.getenv().getOrDefault("MYSQLDATABASE", "foodies");
-
-		String url = "jdbc:mysql://" + host + ":" + port + "/" + database
-				+ "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-
-		String username = System.getenv().getOrDefault("MYSQLUSER", "root");
-		String password = System.getenv().getOrDefault("MYSQLPASSWORD", "");
-
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection(url, username, password);
-		} 
-		catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+        con = DatabaseConnection.getConnection();
+    }
 
 	@Override
 	public int addMenu(Menu menu) {
@@ -127,32 +108,27 @@ public class MenuDaoImpl implements MenuDao {
 
 	@Override
 	public int updateMenu(Menu menu) {
-
-		try {
-			pstmt =con.prepareStatement(UPDATE_MENU);
-			pstmt.setString(1, menu.getItemName());
-			pstmt.setInt(2, menu.getPrice());
-			pstmt.setFloat(3, menu.getRatings());
-			pstmt.setBoolean(4, menu.getisAvailable());
-
-			return pstmt.executeUpdate();
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+		try (PreparedStatement statement = con.prepareStatement(
+				"update menu set itemName=?, price=?, ratings=?, isAvailable=? where menu_id=?")) {
+			statement.setString(1, menu.getItemName());
+			statement.setInt(2, menu.getPrice());
+			statement.setFloat(3, menu.getRatings());
+			statement.setBoolean(4, menu.getisAvailable());
+			statement.setInt(5, menu.getMenu_id());
+			return statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new IllegalStateException("Unable to update menu item " + menu.getMenu_id(), e);
 		}
-		return 0;
 	}
 
 	@Override
 	public int deleteMenu(int menu_id) {
-		try {
-			pstmt =con.prepareStatement(DELETE_MENU);
-			return pstmt.executeUpdate();
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+		try (PreparedStatement statement = con.prepareStatement(DELETE_MENU)) {
+			statement.setInt(1, menu_id);
+			return statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new IllegalStateException("Unable to delete menu item " + menu_id, e);
 		}
-		return 0;
 	}
 
 	@Override

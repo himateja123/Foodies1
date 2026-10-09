@@ -25,27 +25,8 @@ public class OrderDaoImpl implements OrderDao {
 	private PreparedStatement pstmt;
 	private Statement stmt;
 	public OrderDaoImpl() {
-
-		String host = System.getenv().getOrDefault("MYSQLHOST", "localhost");
-		String port = System.getenv().getOrDefault("MYSQLPORT", "3306");
-		String database = System.getenv().getOrDefault("MYSQLDATABASE", "foodies");
-
-		String url = "jdbc:mysql://" + host + ":" + port + "/" + database
-				+ "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-
-		String username = System.getenv().getOrDefault("MYSQLUSER", "root");
-		String password = System.getenv().getOrDefault("MYSQLPASSWORD", "");
-
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection(url, username, password);
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+        con = DatabaseConnection.getConnection();
+    }
 
 	@Override
 	public int addOrder(Orders order) {
@@ -70,67 +51,46 @@ public class OrderDaoImpl implements OrderDao {
 
 	@Override
 	public Orders getOrder(int order_id) {
-
-		Orders order=null;
-
-		try {
-			pstmt = con.prepareStatement(GET_ORDER);
-			ResultSet res = pstmt.executeQuery();
-
-			if(res.next()) {
-				int orderid =res.getInt("order_id");
-				int userid =res.getInt("u_id");
-				double amount =res.getDouble("totalAmount");
-				String modeofpay =res.getString("modeofPayment");
-				String status =res.getString("status");
-
-				order =new Orders(orderid,0,userid,amount,modeofpay,status,null);
+		try (PreparedStatement statement = con.prepareStatement(GET_ORDER)) {
+			statement.setInt(1, order_id);
+			try (ResultSet res = statement.executeQuery()) {
+				if (res.next()) {
+					return new Orders(res.getInt("order_id"), res.getInt("restaurant_id"),
+							res.getInt("u_id"), res.getDouble("totalAmount"),
+							res.getString("modeofPayment"), res.getString("status"), res.getString("address"));
+				}
 			}
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			throw new IllegalStateException("Unable to load order " + order_id, e);
 		}
-		return order;
+		return null;
 	}
 
 	@Override
 	public List<Orders> getAll() {
-
-		List<Orders> list =new ArrayList<Orders>();
-		Orders order=null;
-
-		try {
-			stmt =con.createStatement();
-			ResultSet res = stmt.executeQuery(GET_ALL);
-
-			int orderid =res.getInt("order_id");
-			int userid =res.getInt("u_id");
-			double amount =res.getDouble("totalAmount");
-			String modeofpay =res.getString("modeofPayment");
-			String status =res.getString("status");
-
-			order = new Orders(orderid,0,userid,amount,modeofpay,status,null);
-			list.add(order);
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+		List<Orders> orders = new ArrayList<>();
+		try (Statement statement = con.createStatement();
+				ResultSet res = statement.executeQuery(GET_ALL)) {
+			while (res.next()) {
+				orders.add(new Orders(res.getInt("order_id"), res.getInt("restaurant_id"),
+						res.getInt("u_id"), res.getDouble("totalAmount"),
+						res.getString("modeofPayment"), res.getString("status"), res.getString("address")));
+			}
+		} catch (SQLException e) {
+			throw new IllegalStateException("Unable to load orders", e);
 		}
-		return list;
+		return orders;
 	}
 
 	@Override
 	public void updateOrder(Orders order) {
-
-		try {
-			pstmt = con.prepareStatement(UPDATE_ORDER);
-
-			pstmt.setDouble(1, order.getTotalAmount());
-			pstmt.setString(2, order.getStatus());
-
-			pstmt.executeUpdate();
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+		try (PreparedStatement statement = con.prepareStatement(UPDATE_ORDER)) {
+			statement.setDouble(1, order.getTotalAmount());
+			statement.setString(2, order.getStatus());
+			statement.setInt(3, order.getOrder_id());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new IllegalStateException("Unable to update order " + order.getOrder_id(), e);
 		}
 	}
 

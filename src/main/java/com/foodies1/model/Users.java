@@ -1,6 +1,6 @@
 package com.foodies1.model;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.sql.Date;
 
 public class Users {

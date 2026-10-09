@@ -10,7 +10,7 @@
 <head>
 <meta charset="UTF-8" />
 <link rel="stylesheet" type="text/css"
-	href="/Foodies1/CSS/restaurants.css?v=10" />
+	href="${pageContext.request.contextPath}/CSS/restaurants.css?v=10" />
 <title>Foodies Restaurants</title>
 </head>
 
@@ -31,7 +31,7 @@ String name = (String) session.getAttribute("name");
     </div>
 
     <div class="center">
-        <img src="/Foodies1/images/logo.svg" class="logo-img" alt="Foodies Logo" />
+        <img src="${pageContext.request.contextPath}/images/logo.svg" class="logo-img" alt="Foodies Logo" />
         <h1 class="main-title">Top Restaurants in Vijayawada</h1>
     </div>
 
@@ -61,7 +61,7 @@ for(Restaurants r : list){
 			class="card-link">
 			<div class="card">
 
-				<img src="/Foodies1/<%= r.getImagePath() %>"
+				<img src="${pageContext.request.contextPath}/<%= r.getImagePath() %>"
 					alt="<%= r.getName() %>" />
 
 				<div class="card-content">
