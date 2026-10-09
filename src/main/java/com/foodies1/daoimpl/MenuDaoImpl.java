@@ -123,14 +123,12 @@ public class MenuDaoImpl implements MenuDao {
 
 	@Override
 	public int deleteMenu(int menu_id) {
-		try {
-			pstmt =con.prepareStatement(DELETE_MENU);
-			return pstmt.executeUpdate();
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+		try (PreparedStatement statement = con.prepareStatement(DELETE_MENU)) {
+			statement.setInt(1, menu_id);
+			return statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new IllegalStateException("Unable to delete menu item " + menu_id, e);
 		}
-		return 0;
 	}
 
 	@Override
