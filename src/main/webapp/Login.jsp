@@ -21,6 +21,10 @@
     <h1>Login</h1>
     <p>or <a href="SignUp.jsp">Create an account</a></p>
 
+    <% if (request.getAttribute("loginError") != null) { %>
+        <p style="color:red; font-weight:bold;"><%= request.getAttribute("loginError") %></p>
+    <% } %>
+
     <form action="loginservlet" method="post">
 
         <label>Mobile Number</label>
