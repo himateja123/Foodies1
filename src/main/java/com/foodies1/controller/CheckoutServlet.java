@@ -19,42 +19,55 @@ import jakarta.servlet.http.HttpSession;
 public class CheckoutServlet extends HttpServlet {
 
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse resp)
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        HttpSession session = req.getSession();
-
-        ClassCreator cart = (ClassCreator) session.getAttribute("cart");
-
-        if (cart == null || cart.getItems().isEmpty()) {
-            resp.sendRedirect("Cart.jsp");
+        HttpSession session = req.getSession(false);
+        if (session == null) {
+            resp.sendRedirect(req.getContextPath() + "/Login.jsp");
             return;
         }
 
-//        int id=Integer.parseInt(req.getParameter("u_id"));
+        ClassCreator cart = (ClassCreator) session.getAttribute("cart");
+        if (cart == null || cart.getItems().isEmpty()) {
+            resp.sendRedirect(req.getContextPath() + "/Cart.jsp");
+            return;
+        }
+
         String payment = req.getParameter("payment");
         String address = req.getParameter("address");
+        if (payment == null || payment.isBlank() || address == null || address.isBlank()) {
+            req.setAttribute("checkoutError", "Please enter a delivery address and choose a payment method.");
+            req.getRequestDispatcher("/Checkout.jsp").forward(req, resp);
+            return;
+        }
 
         int total = 0;
-
         for (CartItem item : cart.getItems().values()) {
             total += item.getPrice() * item.getQuantity();
         }
+        int grandTotal = total + 40;
 
-        int deliveryFee = 40;
-        int grandTotal = total + deliveryFee;
+        try {
+            Orders order = new Orders(grandTotal, payment, address);
+            OrderDao orderDao = new OrderDaoImpl();
+            int saved = orderDao.addOrder(order);
 
-        session.setAttribute("address", address);
-        session.setAttribute("payment", payment);
-        session.setAttribute("grandTotal", grandTotal);
-        
-        Orders od = new Orders(grandTotal,payment,address);
-        
-       OrderDao odi = new OrderDaoImpl();
-       odi.addOrder(od);
+            if (saved <= 0) {
+                req.setAttribute("checkoutError", "We couldn't save your order. Your cart is still available; please try again.");
+                req.getRequestDispatcher("/Checkout.jsp").forward(req, resp);
+                return;
+            }
 
-        session.removeAttribute("cart");
-
-        resp.sendRedirect("OrderSuccess.jsp");
+            session.setAttribute("address", address);
+            session.setAttribute("payment", payment);
+            session.setAttribute("grandTotal", grandTotal);
+            session.removeAttribute("cart");
+            resp.sendRedirect(req.getContextPath() + "/OrderSuccess.jsp");
+        } catch (IllegalStateException ex) {
+            log("Foodies checkout could not connect to the database.", ex);
+            req.setAttribute("checkoutError", "Ordering is temporarily unavailable because the database could not be reached. Your cart is still available.");
+            req.getRequestDispatcher("/Checkout.jsp").forward(req, resp);
+        }
     }
 }
