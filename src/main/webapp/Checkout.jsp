@@ -16,6 +16,10 @@
 
 <h1>SECURE CHCECKOUT</h1>
 
+<% if (request.getAttribute("checkoutError") != null) { %>
+    <p style="color:red; font-weight:bold;"><%= request.getAttribute("checkoutError") %></p>
+<% } %>
+
 <%
 ClassCreator cart = (ClassCreator) session.getAttribute("cart");
 
