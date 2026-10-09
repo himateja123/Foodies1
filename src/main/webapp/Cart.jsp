@@ -11,7 +11,7 @@
 <meta charset="UTF-8" />
 <title>Foodies Cart</title>
 
-<link rel="stylesheet" type="text/css" href="/Foodies1/CSS/cart.css?v=1" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CSS/cart.css?v=1" />
 
 </head>
 
@@ -36,7 +36,7 @@
 	%>
 
 	<div>
-		<img src="/Foodies1/<%=item.getImagePath()%>"
+		<img src="${pageContext.request.contextPath}/<%=item.getImagePath()%>"
 			alt="<%=item.getItemName()%>" width="150" />
 
 		<h2><%=item.getItemName()%></h2>
