@@ -58,29 +58,25 @@ public class RestaurantDaoImpl implements RestaurantDao{
 
 	@Override
 	public Restaurants getRestaurant(int restaurant_id) {
-		Restaurants rest=null;
-
-		try {
-			pstmt =con.prepareStatement(GET_RESTAURANT);
-			pstmt.setInt(1, restaurant_id);
-
-			ResultSet res = pstmt.executeQuery();
-
-			if(res.next()) {
-				int r_id = res.getInt("restaurant_id");
-				String name=res.getString("name");
-				float ratings=res.getFloat("ratings");
-				String cuisine =res.getString("cuisineType");
-				String address=res.getString("address");
-				boolean isactive=res.getBoolean("isActive");
-
+		try (PreparedStatement statement = con.prepareStatement(GET_RESTAURANT)) {
+			statement.setInt(1, restaurant_id);
+			try (ResultSet res = statement.executeQuery()) {
+				if (res.next()) {
+					int id = res.getInt("restaurant_id");
+					String restaurantName = res.getString("name");
+					String imagePath = res.getString("imagePath");
+					float restaurantRatings = res.getFloat("ratings");
+					String restaurantCuisine = res.getString("cuisineType");
+					String restaurantAddress = res.getString("address");
+					boolean active = res.getBoolean("isActive");
+					return new Restaurants(id, restaurantName, imagePath, restaurantRatings,
+							restaurantCuisine, restaurantAddress, active);
+				}
 			}
-			rest = new Restaurants(r_id, name, null, ratings, cuisine, address, isactive);
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			throw new IllegalStateException("Unable to load restaurant " + restaurant_id, e);
 		}
-		return rest;
+		return null;
 	}
 
 	@Override
@@ -116,22 +112,18 @@ public class RestaurantDaoImpl implements RestaurantDao{
 
 	@Override
 	public void updateRestaurant(Restaurants restaurant) {
-
-		try {
-			pstmt =con.prepareStatement(UPDATE);
-			pstmt.setString(1, restaurant.getName());
-			pstmt.setString(2, restaurant.getImagePath());
-			pstmt.setFloat(3, restaurant.getRatings());
-			pstmt.setBoolean(4, restaurant.getIsActive());
-			pstmt.setInt(5, restaurant.getRestaurant_id());
-
-			pstmt.executeUpdate();
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+		try (PreparedStatement statement = con.prepareStatement(UPDATE)) {
+			statement.setString(1, restaurant.getName());
+			statement.setString(2, restaurant.getImagePath());
+			statement.setFloat(3, restaurant.getRatings());
+			statement.setString(4, restaurant.getCuisineType());
+			statement.setString(5, restaurant.getAddress());
+			statement.setBoolean(6, restaurant.getIsActive());
+			statement.setInt(7, restaurant.getRestaurant_id());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new IllegalStateException("Unable to update restaurant " + restaurant.getRestaurant_id(), e);
 		}
-
-
 	}
 
 	@Override
