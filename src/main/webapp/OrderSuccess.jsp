@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Order successful</title>
 
-<link rel="stylesheet" type="text/css" href="/Foodies1/CSS/ordersuccess.css?v=1" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CSS/ordersuccess.css?v=1" />
 
 </head>
 <body>
