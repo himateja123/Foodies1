@@ -25,27 +25,8 @@ public class OrderDaoImpl implements OrderDao {
 	private PreparedStatement pstmt;
 	private Statement stmt;
 	public OrderDaoImpl() {
-
-		String host = System.getenv().getOrDefault("MYSQLHOST", "localhost");
-		String port = System.getenv().getOrDefault("MYSQLPORT", "3306");
-		String database = System.getenv().getOrDefault("MYSQLDATABASE", "foodies");
-
-		String url = "jdbc:mysql://" + host + ":" + port + "/" + database
-				+ "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-
-		String username = System.getenv().getOrDefault("MYSQLUSER", "root");
-		String password = System.getenv().getOrDefault("MYSQLPASSWORD", "");
-
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			con = DriverManager.getConnection(url, username, password);
-
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+        con = DatabaseConnection.getConnection();
+    }
 
 	@Override
 	public int addOrder(Orders order) {
