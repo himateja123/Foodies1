@@ -9,7 +9,7 @@
 <meta charset="UTF-8">
 <title>CHCECKOUT</title>
 
-<link rel="stylesheet" type="text/css" href="/Foodies1/CSS/checkout.css?v=1" />
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CSS/checkout.css?v=1" />
 
 </head>
 <body>
@@ -40,7 +40,7 @@ if(cart == null || cart.getItems().isEmpty()) {
 for(CartItem item : cart.getItems().values()) {
 %>
     <div>
-    <img src="/Foodies1/<%=item.getImagePath()%>"
+    <img src="${pageContext.request.contextPath}/<%=item.getImagePath()%>"
 			alt="<%=item.getItemName()%>" width="150" />
         <h3><%= item.getItemName() %></h3>
         <p>Price: ₹<%= item.getPrice() %></p>
