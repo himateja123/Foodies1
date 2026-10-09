@@ -84,17 +84,13 @@ public class OrderDaoImpl implements OrderDao {
 
 	@Override
 	public void updateOrder(Orders order) {
-
-		try {
-			pstmt = con.prepareStatement(UPDATE_ORDER);
-
-			pstmt.setDouble(1, order.getTotalAmount());
-			pstmt.setString(2, order.getStatus());
-
-			pstmt.executeUpdate();
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
+		try (PreparedStatement statement = con.prepareStatement(UPDATE_ORDER)) {
+			statement.setDouble(1, order.getTotalAmount());
+			statement.setString(2, order.getStatus());
+			statement.setInt(3, order.getOrder_id());
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new IllegalStateException("Unable to update order " + order.getOrder_id(), e);
 		}
 	}
 
